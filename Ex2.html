@@ -1,0 +1,94 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Don't Click me</title>
+</head>
+<body>
+    <style>
+        body{
+            background-color: #1f1f1f;
+        }
+        button{
+            padding: .5rem .7rem ;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .moveable{
+            position: absolute;
+            top:var(--top);
+            left: var(--left);
+            
+        }
+        .tranfromBack{
+            transform: translate(-50%,-50%);
+        }
+    </style>
+    
+    <button style="--top:50%;--left:50%;"  class="moveable tranfromBack">Click me🤣</button>
+    
+    <script src="./dist/tween.umd.js"></script>
+    <script>
+        // alert("wow")
+        const button=document.querySelector("button");
+
+        const colorRan=() => {
+            const hexValue=[1,2,3,4,5,6,7,8,9,'A','B','C','D','E','F'];
+            var hexColor='#';
+            for (let i=0;i<6;i++){
+                var index=Math.floor(Math.random()*hexValue.length);
+                hexColor+=hexValue[index];
+                
+            }
+            return hexColor;
+        }
+
+        function animate(time) {
+            requestAnimationFrame(animate);
+            TWEEN.update(time);
+        }
+        requestAnimationFrame(animate);
+
+        const MoveButton=(startX,startY,endX,endY)=>{
+            // button.style.backgroundColor=`${colorRan()}`
+            const color=colorRan();
+            const coords={
+                x:startX,
+                y:startY
+            }
+            // console.log("Wow")
+            var tween = new TWEEN.Tween(coords)
+            .to({
+                x:endX,
+                y:endY
+            },700)
+            .easing(TWEEN.Easing.Quadratic.Out) 
+            .onUpdate(()=>{
+                button.style.cssText=`--top:${coords.y}px;--left:${coords.x}px;`
+                button.style.backgroundColor=color
+            })
+            .start()
+         
+        }
+
+
+
+
+      button.addEventListener("click",()=>{
+        // console.log("HI")
+        // button.classList.remove('tranfromBack')
+        
+        var x,y;
+        y=(Math.random()*document.documentElement.clientHeight*0.9);
+        x=(Math.random()*document.documentElement.clientWidth*0.9);
+        while(((x==button.offsetLeft || y==button.offsetTop))){ 
+            y=(Math.random()*document.documentElement.clientHeight);
+            x=(Math.random()*document.documentElement.clientWidth);
+        }
+        // console.log(x,y)
+        MoveButton(button.offsetLeft,button.offsetTop,x,y)
+       })
+    </script>
+</body>
+</html>
