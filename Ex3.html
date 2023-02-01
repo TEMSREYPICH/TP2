@@ -1,0 +1,100 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com/"></script>
+    <script src="/Tailwindcss.js" ></script>
+    <title>Image Viewer</title>
+</head>
+<body >
+    
+    <style>
+        body{
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+        #container{
+            width: 35vw;
+            border: 8px solid #808080;
+
+        }
+        .canvas{
+            width: 100%;
+        }
+        .input{
+            width: 100%;
+            height: fit-content;
+            background-color: #808080;  
+            display: flex;
+            justify-content: center;
+        }
+        .sub_input_contianer{
+            width: 80%;
+        }
+        @media only screen and (max-width: 700px){
+            #container{
+                width: 80vw;
+            }
+            .canvas{
+                width: 100%;
+            }
+            .sub_input_contianer{
+                width: 100%;
+            }
+        }
+    </style>
+    
+    
+    <div id="container" >
+        <canvas class="canvas"></canvas>
+        <div class="input">
+            <div class="sub_input_contianer">
+                <p>Canvas 👻: Insert me an image please</p>
+                <input type="file"  name="image" id="image" accept="image/*" >
+            </div>
+        </div>
+    </div>
+    <script>
+        const input=document.querySelector("#image");
+        const Canvas=document.querySelector('.canvas');
+        Canvas.setAttribute('height',`${document.documentElement.clientHeight/3 }px`)
+        const Context=Canvas.getContext('2d');
+        input.addEventListener('change',((e)=>{
+            const file=input.files[0];
+            var reader = new FileReader();
+            if(file){
+                reader.onload=()=>{
+                    var image = new Image();
+                    // image.src =reader.result;
+                    // console.log(image.naturalWidth,image.naturalHeight)
+                    image.onload=()=>{
+                        // console.log(image.offsetHeight)
+                        // console.log(image.naturalWidth,image.naturalHeight)
+                        
+                        const h=image.naturalHeight;
+                        const w=image.naturalWidth;
+                        const nh=(h/w)*Canvas.width;
+                        // console.log(nh);    
+                        Canvas.height=nh;
+                        Context.imageSmoothingEnabled = true;
+                        Context.drawImage(image,0,0,Canvas.width,Canvas.height);
+                        Context.drawImage(image,0,0,Canvas.width,Canvas.height);
+                        // console.log(image.offsetHeight)
+                        // Canvas.height=image.offsetHeight
+                        // console.log(image.width,image.height)
+         
+                    }
+                    image.src =reader.result;
+                }            
+                reader.readAsDataURL(file)
+                
+            }
+        }))
+    </script>
+</body>
+</html>
